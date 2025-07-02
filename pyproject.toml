@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "db-sqlite3>=0.0.1",
     "dotenv>=0.9.9",
     "litellm>=1.73.6",
     "pytest>=8.4.1",
@@ -22,10 +23,13 @@ indent-width = 4
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["T201", "D401", "D211", "D213", "RUF002"]
+ignore = ["T201", "D401", "D211", "D213", "RUF002", "FBT001", "FBT002"]
 fixable = ["ALL"]
 unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.pylint]
+max-args = 8
 
 [tool.ruff.format]
 quote-style = "double"

@@ -1,33 +1,13 @@
 """Main module to run the game."""
 
-import sys
-
 from dotenv import load_dotenv
 
 from src.choices import ConfigManager, GameRunner, MemoryManager
-from src.lib_constant import Breaks, Numerics
+from src.lib_constant import Breaks
+from src.utility import get_user_input
 
 load_dotenv()
 
-
-def ask_choice(attempt: int = 1) -> int:
-    """User entry for the game.
-
-    Args:
-        attempt (int): Number of attempts made. Default is 1.
-
-    Return:
-        int: Index of the choice.
-
-    """
-    choice = int(input("Enter your choice: "))
-    if attempt == Numerics.max_attempt:
-        print("Max attempt reached. You must be 'Blind' or 'illiterate'.")
-        sys.exit(1)
-    if choice not in range(*Numerics.choice_range):
-        attempt += 1
-        return ask_choice(attempt)
-    return choice
 
 def choose_choice() -> int:
     """Header function to display available choices."""
@@ -35,7 +15,11 @@ def choose_choice() -> int:
           f"{Breaks.space_2}[1] Play Game{Breaks.newline}"
           f"{Breaks.space_2}[2] Clear Memory{Breaks.newline}"
           f"{Breaks.space_2}[3] Configuration{Breaks.newline}")
-    return ask_choice()
+    return get_user_input(
+        "Enter your choice: ",
+        is_int=True,
+        constrains=list(range(1, 4)),
+    )
 
 def process_choice(choice: int) -> None:
     """Process the user choice.
