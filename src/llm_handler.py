@@ -33,7 +33,9 @@ class LLMHandler:
             messages=[self._construct_msg(prompt=request_prompt)],
             response_format=structure,
         )
-        content = response.choices[0].messages.content
+        content = response.choices[0].message.content
+        print(content)
+
         if structure:
             return json.loads(content)
         return content

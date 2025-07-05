@@ -72,7 +72,7 @@ class GameValues:
         14: 500_000,  # Five Hundred Thousand Dollars
         15: 1_000_000,  # One Million Dollars (the ultimate grand prize)
     }
-    possible_answers: ClassVar = [1, 2, 3, 4, "L", "l"]
+    possible_answers: ClassVar = ["1", "2", "3", "4", "L", "l"]
     total_questions: int = 15
 
 

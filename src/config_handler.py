@@ -21,5 +21,9 @@ class ConfigHandler:
         """
         return self.config.get("difficulty_level")
 
-    def read_current_config(self) -> None:
+    @staticmethod
+    def read_current_config() -> dict:
         """Reads current configuration from file and returns it."""
+        return {
+            "difficulty_level": 2,
+        }

@@ -143,18 +143,18 @@ class GameRunner(Choice):
             question (Question): question to be shown.
 
         """
-        print(f"[Q.No {question.question_no}] {question.question}{Breaks.newline}"
-              f"1. {question.choices[0]}{Breaks.tab_2}3. {question.choices[2]}"
+        print(f"{Breaks.newline}[Q.No {question.question_no}] {question.question}{Breaks.newline}"
+              f"1. {question.choices[0]}{Breaks.tab_2}3. {question.choices[2]}{Breaks.newline}"
               f"2. {question.choices[1]}{Breaks.tab_2}4. {question.choices[3]}")
 
-        answer = self.answer_lifeline_loop()
+        answer = int(self.answer_lifeline_loop())
         self.process_answer(answer)
 
-    def answer_lifeline_loop(self) -> str | int:
+    def answer_lifeline_loop(self) -> str:
         """Allow user to answer the question with multiple lifelines.
 
         Returns:
-            str | int: Answer for the question.
+            str: Answer for the question.
 
         """
         user_answer = self.request_answer_from_user()
@@ -163,7 +163,7 @@ class GameRunner(Choice):
             return self.answer_lifeline_loop()
         return self.answer_lifeline_loop()
 
-    def process_answer(self, user_answer: str) -> None:
+    def process_answer(self, user_answer: int) -> None:
         """Validate user answer."""
         user_answer = self._current_question.choices(user_answer)
         if user_answer.lower() == self._current_question.correct_answer.lower():

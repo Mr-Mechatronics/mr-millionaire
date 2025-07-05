@@ -3,7 +3,7 @@
 import sqlite3
 
 import numpy as np
-from litellm import embedding
+from langchain.embeddings import HuggingFaceEmbeddings
 
 
 class MemoryHandler:
@@ -55,8 +55,9 @@ class MemoryHandler:
             list[float]: List of embedded words.
 
         """
-        resp = embedding(text, model="huggingface/hf-inference/Qwen/Qwen3-Embedding-0.6B")
-        return resp["data"][0]["embedding"]
+        embedder = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+        resp = embedder.embed_query(text)
+        return resp
 
     def is_semantic_duplicate(self, question: str) -> bool:
         """Check if the question is similar to the one in the database.
