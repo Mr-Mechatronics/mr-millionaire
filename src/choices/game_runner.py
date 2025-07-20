@@ -6,7 +6,6 @@ from src import Choice
 from src.config_handler import ConfigHandler
 from src.lib_constant import Breaks, GameValues, LLMPrompts, Messages
 from src.llm_handler import LLMHandler
-from src.memory_handler import MemoryHandler
 from src.schema import FiftyFiftyAnswer, PhoneFriendAnswer, PlayerName, QuestionSchema
 from src.utility import get_user_input, print_strikethrough
 
@@ -29,11 +28,12 @@ class GameRunner(Choice):
     def __init__(self) -> None:
         """Constructor for GameRunner."""
         self.llm_handler = LLMHandler()
-        self.mem = MemoryHandler()
+        # self.mem = MemoryHandler()
         self.config = ConfigHandler()
         self.prize_won = 0
         self._current_question = None
         self._question_history = []
+        self._question_history_prompt = ""
         self._question_no = 0
         self._life_lines_used = {}
         self._player_name = ""
@@ -77,14 +77,15 @@ class GameRunner(Choice):
     def generate_next_question(self) -> Question:
         """Generate next question to be asked to the player."""
         question_prompt = self._construct_question_prompt()
-        question = Question(
+        return Question(
             question_no=self._question_no, **self.llm_handler.request_llm(question_prompt, QuestionSchema),
         )
-        if self.mem.already_seen(question.question):
-            self.generate_next_question()
-        if self.mem.is_semantic_duplicate(question.question):
-            self.generate_next_question()
-        return question
+
+        # if self.mem.already_seen(question.question):
+        #     self.generate_next_question()
+        # if self.mem.is_semantic_duplicate(question.question):
+        #     self.generate_next_question()
+
 
     def phone_a_friend(self) -> str:
         """AI friend who can help you with an answer.
@@ -104,11 +105,16 @@ class GameRunner(Choice):
         return friend_answer[GameValues.answer]
 
     def process_lifeline(self, ll_choice: int) -> None:
-        """Process lifeline choice."""
-        if ll_choice == GameValues.lifeline_options.keys()[0]:
+        """Process lifeline choice.
+
+        Args:
+            ll_choice (int): Life line choice chosen by user.
+
+        """
+        if GameValues.lifeline_options[ll_choice] == "Phone a Friend":
             friend_answer = self.phone_a_friend()
             print(Messages.friend_response.format(question=self._current_question.question, answer=friend_answer))
-        if ll_choice == GameValues.lifeline_options.keys()[1]:
+        if GameValues.lifeline_options[ll_choice] == "50-50":
             fifty_fifty_answer = self.fifty_fifty()
             print(Messages.fifty_fifty_response.format(choice_1=fifty_fifty_answer[0], choice_2=fifty_fifty_answer[1]))
 
@@ -122,11 +128,12 @@ class GameRunner(Choice):
 
     def show_lifelines(self) -> None:
         """Show lifelines available."""
-        print("Lifeline choices:")
+        print(f"{Breaks.newline}Lifeline choices:")
         for ll_choice, lifeline in GameValues.lifeline_options.items():
-            if ll_choice not in self._life_lines_used:
-                print(f"[{ll_choice}] {lifeline}]", end=f"{Breaks.tab_2}")
-            print_strikethrough(f"[{ll_choice}] {lifeline}]", end=f"{Breaks.tab_2}")
+            if ll_choice in self._life_lines_used:
+                print_strikethrough(f"[{ll_choice}] {lifeline}", end=f"{Breaks.tab_2}")
+            else:
+                print(f"[{ll_choice}] {lifeline}", end=f"{Breaks.tab_2}")
         print(Breaks.newline)
         ll_value = get_user_input(
             "Enter your lifeline choice : ",
@@ -161,11 +168,11 @@ class GameRunner(Choice):
         if user_answer in GameValues.lifeline:
             self.show_lifelines()
             return self.answer_lifeline_loop()
-        return self.answer_lifeline_loop()
+        return user_answer
 
     def process_answer(self, user_answer: int) -> None:
         """Validate user answer."""
-        user_answer = self._current_question.choices(user_answer)
+        user_answer = self._current_question.choices[user_answer - 1]
         if user_answer.lower() == self._current_question.correct_answer.lower():
             self.prize_won = GameValues.prize_money.get(self._question_no)
             print(Messages.correct_answer.format(player=self._player_name, money=self.prize_won))
@@ -207,9 +214,14 @@ class GameRunner(Choice):
             str: Question prompt.
 
         """
-        return LLMPrompts.question_prompt.format(
+        base_prompt = LLMPrompts.question_prompt.format(
             difficulty_level=self.config.difficulty_level,
         )
+        if self._question_history:
+            last_question = self._question_history[-1]
+            self._question_history_prompt += f"{last_question.question_no}. {last_question.question}\n"
+            base_prompt += LLMPrompts.question_history + self._question_history_prompt
+        return base_prompt
 
     @property
     def _lifeline_available(self) -> bool:
@@ -219,7 +231,4 @@ class GameRunner(Choice):
             bool: True if lifeline is available else False.
 
         """
-        if len(self._life_lines_used.keys()) == len(GameValues.lifeline_options.keys()):
-            print(Messages.no_lifeline)
-            return False
-        return True
+        return len(self._life_lines_used.keys()) != len(GameValues.lifeline_options.keys())

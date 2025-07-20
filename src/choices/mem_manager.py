@@ -9,4 +9,4 @@ class MemoryManager(Choice):
 
     def run(self) -> None:
         """Run the Memory manager."""
-        pass
+        print("Memory Manager backend is not yet designed.!")

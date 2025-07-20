@@ -3,7 +3,7 @@
 import sqlite3
 
 import numpy as np
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 
 class MemoryHandler:
@@ -56,8 +56,7 @@ class MemoryHandler:
 
         """
         embedder = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-        resp = embedder.embed_query(text)
-        return resp
+        return embedder.embed_query(text)
 
     def is_semantic_duplicate(self, question: str) -> bool:
         """Check if the question is similar to the one in the database.

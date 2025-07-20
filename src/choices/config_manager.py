@@ -9,4 +9,4 @@ class ConfigManager(Choice):
 
     def run(self) -> None:
         """Run the configuration manager."""
-        pass
+        print("Configuration Manager backend is not yet designed.!")

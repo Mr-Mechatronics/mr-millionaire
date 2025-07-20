@@ -20,7 +20,7 @@ class Messages:
 
     default_int_err: str = "Expected integer value. Please retry. (Attempt left : {attempts_left})"
     constrain_err: str = "Only allowed values are {constrains}.\nPlease retry. (Attempt left : {attempts_left})"
-    correct_answer: str = ("Congratulations {player}! Your answer is correct.\n"
+    correct_answer: str = ("\nCongratulations {player}! Your answer is correct.\n"
                            "You've won - ${money}.")
     friend_response: str = "Your AI friend thinks the answer for the question : '{question}' could be '{answer}'."
     fifty_fifty_response: str = ("After shortlisting 50-50 process..\n"
@@ -30,7 +30,7 @@ class Messages:
     no_lifeline: str = "\nNo lifeline available. You've already used all the lifelines available.\n"
     player_quit: str = ("That was a wise decision.!\n"
                         "{player} chose to quit the game and leaving with prize money - ${money}.")
-    wrong_answer: str = ("Oops! the answer wasn't correct. You lost the GAME! Mr. {player}\n"
+    wrong_answer: str = ("\nOops! the answer wasn't correct. You lost the GAME! Mr. {player}\n"
                          "We are sorry to say you are not going to proceed further.! Better luck next time!.\n")
 
 
@@ -80,11 +80,14 @@ class LLMPrompts:
 
     """LLM prompts constant values used in this repository."""
 
-    fifty_fifty_prompt: str = ("For this question : '{question}'."
-                               "the choices are: '{choices}'."
-                               "from these choices filter 2 choice in which 1 is the correct answer to the question.")
+    fifty_fifty_prompt: str = ("For the question '{question}'."
+                               "Form the options : '{choices}', Select exactly two choices."
+                               "One must be the correct answer, and one must be a wrong option."
+                               "Return the result as a JSON with this format:"
+                               "'choices' : ['<choice1>', '<choice2>'], correct_answer: '<correct answer>")
     phone_a_friend_prompt: str = ("Please give me an answer to the question : '{question}' which may have the "
                            "possible answers '{choices}'. What is the correct answer for this question.")
     player_name_prompt: str = "Give me a random scientist name."
     question_prompt: str = ("Generate a General Knowledge question with difficulty level as {difficulty_level} on "
                             "the scale of 1-5, also provide 4 multiple choice to pick the write answer.")
+    question_history: str = "The question should not be in the below list of already asked questions."

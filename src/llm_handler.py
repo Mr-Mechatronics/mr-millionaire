@@ -34,7 +34,6 @@ class LLMHandler:
             response_format=structure,
         )
         content = response.choices[0].message.content
-        print(content)
 
         if structure:
             return json.loads(content)

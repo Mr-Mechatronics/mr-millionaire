@@ -9,7 +9,7 @@ class FiftyFiftyAnswer(BaseModel):
     """Answer choices for the question."""
 
     choices: conlist(str, min_length=2, max_length=2) = Field(
-        ..., description="Exactly two answer choices.",
+        ..., description="Exactly two choices in which 1 is a correct answer.",
     )
     correct_answer: str = Field(
         ..., description="Correct answer (must match one of the choices).",
