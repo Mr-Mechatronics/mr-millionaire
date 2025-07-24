@@ -3,6 +3,7 @@ import sys
 from dataclasses import dataclass
 
 from src import Choice
+from src.choices.history_manager import HistoryManager
 from src.config_handler import ConfigHandler
 from src.lib_constant import Breaks, GameValues, LLMPrompts, Messages
 from src.llm_handler import LLMHandler
@@ -28,8 +29,8 @@ class GameRunner(Choice):
     def __init__(self) -> None:
         """Constructor for GameRunner."""
         self.llm_handler = LLMHandler()
-        # self.mem = MemoryHandler()
         self.config = ConfigHandler()
+        self.history = HistoryManager()
         self.prize_won = 0
         self._current_question = None
         self._question_history = []
@@ -120,11 +121,13 @@ class GameRunner(Choice):
 
     def run(self) -> None:
         """Run the game runner."""
+        self.config.set_initial_configuration()
         self.set_player_name()
         while self._question_no < GameValues.total_questions:
             self.ask_question()
             self.continue_or_drop()
-        print(Messages)
+        print(Messages.winning_message.format(player=self._player_name, money=self.prize_won))
+        self.history.write_to_history(self._player_name, self.prize_won)
 
     def show_lifelines(self) -> None:
         """Show lifelines available."""
@@ -215,7 +218,7 @@ class GameRunner(Choice):
 
         """
         base_prompt = LLMPrompts.question_prompt.format(
-            difficulty_level=self.config.difficulty_level,
+            difficulty_level=self.config.configuration.difficulty,
         )
         if self._question_history:
             last_question = self._question_history[-1]

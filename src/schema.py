@@ -1,7 +1,22 @@
 """Quiz question schema."""
 
 
-from pydantic import BaseModel, Field, ValidationInfo, conlist, field_validator
+from pydantic import BaseModel, Field, ValidationInfo, conint, conlist, field_validator
+
+
+class ConfigurationSchema(BaseModel):
+
+    """Game configuraiton schema."""
+
+    difficulty_level: conint(ge=1, le=5)  = Field(
+        ..., description="Difficulty level of the question. ",
+        )
+    llm_api_key: str = Field(
+        ..., description="LLM endpoint API key",
+    )
+    llm_model: str = Field(
+        ..., description="LLM model to be used.",
+    )
 
 
 class FiftyFiftyAnswer(BaseModel):

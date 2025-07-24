@@ -14,6 +14,7 @@ dependencies = [
     "pytest>=8.4.1",
     "ruff>=0.12.1",
     "sentence-transformers>=5.0.0",
+    "tabulate>=0.9.0",
 ]
 
 [tool.ruff]
@@ -27,7 +28,7 @@ indent-width = 4
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["T201", "D401", "D211", "D213", "RUF002", "FBT001", "FBT002"]
+ignore = ["T201", "D401", "D211", "D213", "RUF002", "FBT001", "FBT002", "ANN401", "DTZ005"]
 fixable = ["ALL"]
 unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"

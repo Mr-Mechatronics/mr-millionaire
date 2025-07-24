@@ -1,5 +1,6 @@
 """Module to manage all the constant values used for this repository."""
 
+from pathlib import Path
 from typing import ClassVar
 
 
@@ -14,6 +15,24 @@ class Breaks:
     tab_2: str = "\t\t"
 
 
+class ConfigVal:
+
+    """Game configuration related values."""
+
+    core_path = Path.home() / ".mr-millionaire"
+    config_path = core_path / "config.json"
+
+    datetime_format: str = "%m/%d/%Y, %H:%M:%S"
+    default_configuration: ClassVar = {
+        "difficulty": 2,
+    }
+
+    env_path = core_path / ".env"
+
+    history_location = core_path / ".history"
+    history_headers: ClassVar = ["Date-Time", "Player Name", "Won Amount"]
+
+
 class Messages:
 
     """Messages used to be printed during this code execution."""
@@ -25,11 +44,15 @@ class Messages:
     friend_response: str = "Your AI friend thinks the answer for the question : '{question}' could be '{answer}'."
     fifty_fifty_response: str = ("After shortlisting 50-50 process..\n"
                                  "Possible answers could be either '{choice_1}' or '{choice_2}'.\n")
+    llm_config_msg: str = ("\nLLM functionality used in this game is by 'litellm' module.\n"
+                        "environmental variables are needs to be set based on 'https://docs.litellm.ai/docs/providers'\n")
     max_attempt_reached: str = ("You have reached the maximum attempt limit."
                                "Max attempt reached. You must be 'Blind' or 'illiterate'.")
     no_lifeline: str = "\nNo lifeline available. You've already used all the lifelines available.\n"
     player_quit: str = ("That was a wise decision.!\n"
                         "{player} chose to quit the game and leaving with prize money - ${money}.")
+    settings_header: str = "\nSettings Configuraiton\n"
+    winning_message: str = "\nCongratulation {player}! You are a Millionaire now.!\nYou have won - ${money}"
     wrong_answer: str = ("\nOops! the answer wasn't correct. You lost the GAME! Mr. {player}\n"
                          "We are sorry to say you are not going to proceed further.! Better luck next time!.\n")
 

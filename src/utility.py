@@ -1,5 +1,6 @@
 """Utility module for this repository."""
 import sys
+from typing import Any
 
 from src.lib_constant import Messages
 
@@ -59,3 +60,74 @@ def get_user_input(
         current_attempt += 1
         return get_user_input(input_str, is_int, constrains, max_attempt, warning_msg, current_attempt)
     return user_input
+
+
+class DotDict(dict):
+
+    """A dictionary subclass that supports dot notation access to dictionary attributes,.
+
+    i.e., you can access keys as attributes.
+
+    Example:
+        data = DotDict({'name': 'user', 'config': {'enabled': True}})
+        print(data.name)             # 'user'
+        print(data.config.enabled)  # True
+
+        Attributes can be set or deleted using dot notation as well.
+
+    """
+
+    def __getattr__(self, key: str) -> Any:
+        """Get attribute using dot notation.
+
+        If the value is a dictionary, it is converted to DotDict recursively.
+
+        Args:
+            key (str) : The key to retrieve from the dictionary.
+
+        Returns:
+            Any : The value associated with the key.
+
+        Raises:
+            AttributeError : If the key does not exist.
+
+        """
+        try:
+            value = self[key]
+            if isinstance(value, dict):
+                return DotDict(value)
+        except KeyError:
+            msg = f"'DotDict' object has no attribute '{key}'"
+            raise AttributeError(msg) from KeyError
+        else:
+            return value
+
+    def __setattr__(self, key: str, value: str) -> None:
+        """Set attribute using dot notation.
+
+        Args:
+            key (str): The key to set in the dictionary.
+            value (str): The value to assign to the key.
+
+        """
+        self[key] = value
+
+    def __delattr__(self, key: str) -> None:
+        """Delete attribute using dot notation.
+
+        Args:
+            key (str) : The key to retrieve from the dictionary.
+
+        Returns:
+            Any : The value associated with the key.
+
+        Raises:
+            AttributeError : If the key does not exist.
+
+        """
+        try:
+            del self[key]
+        except KeyError:
+            msg = f"'DotDict' object has no attribute '{key}'"
+            raise AttributeError(msg) from KeyError
+

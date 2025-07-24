@@ -1,12 +1,13 @@
 """Main module to run the game."""
 
+
 from dotenv import load_dotenv
 
-from src.choices import ConfigManager, GameRunner, MemoryManager
-from src.lib_constant import Breaks
+from src.choices import ConfigManager, GameRunner, HistoryManager, MemoryManager
+from src.lib_constant import Breaks, ConfigVal
 from src.utility import get_user_input
 
-load_dotenv()
+load_dotenv(dotenv_path=ConfigVal.env_path)
 
 
 def choose_choice() -> int:
@@ -14,11 +15,13 @@ def choose_choice() -> int:
     print(f"Choose one from options:{Breaks.newline}"
           f"{Breaks.space_2}[1] Play Game{Breaks.newline}"
           f"{Breaks.space_2}[2] Clear Memory{Breaks.newline}"
-          f"{Breaks.space_2}[3] Configuration{Breaks.newline}")
+          f"{Breaks.space_2}[3] Configuration{Breaks.newline}"
+          f"{Breaks.space_2}[4] Show History{Breaks.newline}")
+
     return get_user_input(
         "Enter your choice: ",
         is_int=True,
-        constrains=list(range(1, 4)),
+        constrains=list(range(1, 5)),
     )
 
 def process_choice(choice: int) -> None:
@@ -32,6 +35,7 @@ def process_choice(choice: int) -> None:
         1 : GameRunner(),
         2 : MemoryManager(),
         3 : ConfigManager(),
+        4 : HistoryManager(),
     }
     process = choice_processing.get(choice)
     process.run()
