@@ -1,7 +1,7 @@
 [project]
 name = "mr-millionaire"
 version = "0.1.0"
-description = "Add your description here"
+description = "A console-based AI quiz game inspired by Who Wants to Be a Millionaire."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -36,3 +36,7 @@ max-args = 8
 quote-style = "double"
 indent-style = "space"
 line-ending = "auto"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"

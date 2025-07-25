@@ -3,3 +3,5 @@
 **/__pycache__/**
 uv.lock
 memory.db
+*.egg-info/
+dist/
