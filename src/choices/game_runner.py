@@ -7,6 +7,7 @@ from src.choices.history_manager import HistoryManager
 from src.config_handler import ConfigHandler
 from src.lib_constant import Breaks, GameValues, LLMPrompts, Messages
 from src.llm_handler import LLMHandler
+from src.memory_handler import MemoryHandler
 from src.schema import FiftyFiftyAnswer, PhoneFriendAnswer, PlayerName, QuestionSchema
 from src.utility import get_user_input, print_strikethrough
 
@@ -31,6 +32,7 @@ class GameRunner(Choice):
         self.llm_handler = LLMHandler()
         self.config = ConfigHandler()
         self.history = HistoryManager()
+        self.mem = MemoryHandler()
         self.prize_won = 0
         self._current_question = None
         self._question_history = []
@@ -49,6 +51,7 @@ class GameRunner(Choice):
         """
         self._question_no += 1
         self._current_question = self.generate_next_question()
+        self.mem.add_to_memory(self._current_question.question)
         self.show_question(self._current_question)
         self._question_history.append(self._current_question)
 
@@ -75,17 +78,17 @@ class GameRunner(Choice):
         )
         return fifty_fifty_answers[GameValues.choices]
 
-    def generate_next_question(self) -> Question:
+    def generate_next_question(self, *add_prompt: str) -> Question:
         """Generate next question to be asked to the player."""
-        question_prompt = self._construct_question_prompt()
-        return Question(
+        question_prompt = self._construct_question_prompt(*add_prompt)
+        next_question = Question(
             question_no=self._question_no, **self.llm_handler.request_llm(question_prompt, QuestionSchema),
         )
 
-        # if self.mem.already_seen(question.question):
-        #     self.generate_next_question()
-        # if self.mem.is_semantic_duplicate(question.question):
-        #     self.generate_next_question()
+        if self.mem.already_seen(next_question.question):
+            self.mem.found_in_memory.append(next_question.question)
+            return self.generate_next_question(*self.mem.found_in_memory)
+        return next_question
 
 
     def phone_a_friend(self) -> str:
@@ -210,7 +213,7 @@ class GameRunner(Choice):
                 LLMPrompts.player_name_prompt, PlayerName,
             )[GameValues.player_name]
 
-    def _construct_question_prompt(self) -> str:
+    def _construct_question_prompt(self, *add_prompt: str) -> str:
         """Construct question prompt.
 
         Returns:
@@ -224,6 +227,9 @@ class GameRunner(Choice):
             last_question = self._question_history[-1]
             self._question_history_prompt += f"{last_question.question_no}. {last_question.question}\n"
             base_prompt += LLMPrompts.question_history + self._question_history_prompt
+        if add_prompt:
+            in_memory_questions = "\n".join(add_prompt)
+            base_prompt += LLMPrompts.in_memory_prompt + in_memory_questions
         return base_prompt
 
     @property

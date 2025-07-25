@@ -32,6 +32,8 @@ class ConfigVal:
     history_location = core_path / ".history"
     history_headers: ClassVar = ["Date-Time", "Player Name", "Won Amount"]
 
+    memory = core_path / ".memory"
+
 
 class Messages:
 
@@ -108,6 +110,7 @@ class LLMPrompts:
                                "One must be the correct answer, and one must be a wrong option."
                                "Return the result as a JSON with this format:"
                                "'choices' : ['<choice1>', '<choice2>'], correct_answer: '<correct answer>")
+    in_memory_prompt: str = ("Some of the questions which the user already seen are as below.\n")
     phone_a_friend_prompt: str = ("Please give me an answer to the question : '{question}' which may have the "
                            "possible answers '{choices}'. What is the correct answer for this question.")
     player_name_prompt: str = "Give me a random scientist name."
