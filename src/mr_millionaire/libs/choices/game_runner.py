@@ -2,14 +2,14 @@
 import sys
 from dataclasses import dataclass
 
-from src import Choice
-from src.choices.history_manager import HistoryManager
-from src.config_handler import ConfigHandler
-from src.lib_constant import Breaks, GameValues, LLMPrompts, Messages
-from src.llm_handler import LLMHandler
-from src.memory_handler import MemoryHandler
-from src.schema import FiftyFiftyAnswer, PhoneFriendAnswer, PlayerName, QuestionSchema
-from src.utility import get_user_input, print_strikethrough
+from mr_millionaire.libs import Choice
+from mr_millionaire.libs.choices.history_manager import HistoryManager
+from mr_millionaire.libs.config_handler import ConfigHandler
+from mr_millionaire.libs.lib_constant import Breaks, GameValues, LLMPrompts, Messages
+from mr_millionaire.libs.llm_handler import LLMHandler
+from mr_millionaire.libs.memory_handler import MemoryHandler
+from mr_millionaire.libs.schema import FiftyFiftyAnswer, PhoneFriendAnswer, PlayerName, QuestionSchema
+from mr_millionaire.libs.utility import get_user_input, print_strikethrough
 
 
 @dataclass
@@ -60,6 +60,7 @@ class GameRunner(Choice):
         user_input = input(f"Press any key to continue or 'q' to leave with ${self.prize_won} : ")
         if user_input == "q":
             print(Messages.player_quit.format(player=self._player_name, money=self.prize_won))
+            self.history.write_to_history(self._player_name, self.prize_won)
             sys.exit(1)
 
     def fifty_fifty(self) -> list:

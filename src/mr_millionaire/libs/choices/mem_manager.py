@@ -1,7 +1,7 @@
 """Memory manager choice module."""
 
-from src import Choice
-from src.memory_handler import MemoryHandler
+from mr_millionaire.libs import Choice
+from mr_millionaire.libs.memory_handler import MemoryHandler
 
 
 class MemoryManager(Choice):

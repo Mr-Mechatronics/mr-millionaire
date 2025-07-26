@@ -1,8 +1,10 @@
 """Configuration handler module."""
 import json
 
-from src.lib_constant import Breaks, ConfigVal, Messages
-from src.utility import DotDict
+from dotenv import load_dotenv
+
+from mr_millionaire.libs.lib_constant import Breaks, ConfigVal, Messages
+from mr_millionaire.libs.utility import DotDict
 
 
 class ConfigHandler:
@@ -70,6 +72,12 @@ class ConfigHandler:
 
         if not ConfigVal.config_path.exists():
             self.set_configuration()
+        self._reload_env()
+
+    @staticmethod
+    def _reload_env() -> None:
+        """Reload Environment variable."""
+        load_dotenv(dotenv_path=ConfigVal.env_path)
 
     @staticmethod
     def _write_configuration(configuration: dict) -> None:
@@ -81,6 +89,3 @@ class ConfigHandler:
         """
         with ConfigVal.config_path.open("w") as f:
             json.dump(configuration, f, indent=4)
-
-
-

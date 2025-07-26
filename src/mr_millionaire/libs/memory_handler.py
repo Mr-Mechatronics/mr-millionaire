@@ -1,6 +1,6 @@
 """Memory DB handler."""
 
-from src.lib_constant import Breaks, ConfigVal
+from mr_millionaire.libs.lib_constant import Breaks, ConfigVal
 
 
 class MemoryHandler:

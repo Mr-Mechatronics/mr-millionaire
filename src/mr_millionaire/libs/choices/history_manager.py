@@ -4,8 +4,8 @@ from datetime import datetime
 
 from tabulate import tabulate
 
-from src import Choice
-from src.lib_constant import ConfigVal
+from mr_millionaire.libs import Choice
+from mr_millionaire.libs.lib_constant import ConfigVal
 
 
 class HistoryManager(Choice):

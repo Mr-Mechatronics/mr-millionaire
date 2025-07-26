@@ -2,7 +2,7 @@
 import sys
 from typing import Any
 
-from src.lib_constant import Messages
+from mr_millionaire.libs.lib_constant import Messages
 
 
 def print_strikethrough(text: str, end: str = "\n") -> None:

@@ -3,9 +3,9 @@
 
 from dotenv import load_dotenv
 
-from src.choices import ConfigManager, GameRunner, HistoryManager, MemoryManager
-from src.lib_constant import Breaks, ConfigVal
-from src.utility import get_user_input
+from mr_millionaire.libs.choices import ConfigManager, GameRunner, HistoryManager, MemoryManager
+from mr_millionaire.libs.lib_constant import Breaks, ConfigVal
+from mr_millionaire.libs.utility import get_user_input
 
 load_dotenv(dotenv_path=ConfigVal.env_path)
 

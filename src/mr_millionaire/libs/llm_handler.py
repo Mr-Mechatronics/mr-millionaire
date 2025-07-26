@@ -6,7 +6,7 @@ import os
 from litellm import completion
 from pydantic import BaseModel
 
-from src.lib_constant import LLMConst
+from mr_millionaire.libs.lib_constant import LLMConst
 
 
 class LLMHandler:

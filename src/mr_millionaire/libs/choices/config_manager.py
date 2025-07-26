@@ -1,8 +1,8 @@
 """Configuration manager choice module."""
 
-from src import Choice
-from src.config_handler import ConfigHandler
-from src.utility import get_user_input
+from mr_millionaire.libs import Choice
+from mr_millionaire.libs.config_handler import ConfigHandler
+from mr_millionaire.libs.utility import get_user_input
 
 
 class ConfigManager(Choice):
